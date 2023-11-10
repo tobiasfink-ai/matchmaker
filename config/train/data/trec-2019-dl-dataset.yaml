@@ -1,0 +1,59 @@
+#
+# a minimal dataset configuration file
+# ----------------------------
+# for BERT-based training, where you don't need idfs and the other helper data for some non-bert models
+
+# the folder where experiments are saved
+expirement_base_path: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/experiments"
+
+#
+# training path
+#
+# format: query-text<tab>pos-text<tab>neg-text
+# format (if train_pairwise_distillation:True): score-pos<tab>score-neg<tab>query-text<tab>pos-text<tab>neg-text
+train_tsv: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/triplets.train.txt"
+
+#
+# continuous validation path
+#
+validation_cont:
+  # format: query-id<tab>doc-id<tab>query-text<tab>doc-text
+  tsv: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-top100.tsv"
+  qrels: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-qrels.tsv"
+  binarization_point: 1 # qrely label >= for MRR,MAP,Recall -> 1 others 0
+  save_only_best: True
+
+#
+# [optional] one time at the end validation (disable by commenting it out)
+# can have multiple entries (a la top1000)
+#
+#validation_end:
+#  top1000orSomeOtherName:
+#    # format: query-id<tab>doc-id<tab>query-text<tab>doc-text
+#    tsv: "/path/to/validation/bm25_plain_top1000.tsv"
+#    qrels: "/path/to/qrels/qrels.dev.tsv"
+#    binarization_point: 1
+#    save_secondary_output: True
+
+#
+# test paths (names & datasets must match up with validation end, if optional candidate_set_path is set for re-ranking depth evaluation)
+# can have multiple entries 
+#
+test:
+  top100:
+    # format: query-id<tab>doc-id<tab>query-text<tab>doc-text
+    tsv: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-doctest2019-top100.tsv"
+    qrels: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/2019qrels-docs.txt"
+    binarization_point: 1
+    save_secondary_output: True
+
+
+#
+# [optional] "leaderboard" for only inference without qrels and evaluation, just creates the ranking
+# comment out if not needed
+#
+#leaderboard:
+#  msmarco_leaderboard_eval:
+#    # format: query-id<tab>doc-id<tab>query-text<tab>doc-text
+#    tsv: "/path/to/leaderboard/bm25_plain_top1000.tsv"
+#    save_secondary_output: False

@@ -65,8 +65,9 @@ class Bert_dot_dualencoder(nn.Module):
         model = self.bert_model_document
         if sequence_type == "query_encode":
             model = self.bert_model_query
-
-        vectors = model(**tokens)[0][:,0,:]
+            
+        #vectors = model(**tokens)[0][:,0,:]
+        vectors = model(**tokens)[0]
         return vectors
 
     def get_param_stats(self):
