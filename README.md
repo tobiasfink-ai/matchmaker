@@ -29,6 +29,8 @@ If you have little experience with neural IR, we recommend you take a look at ou
 We recommend using a fresh conda environment with Python 3.8 *(can't use 3.9 atm, because of faiss)* 
 
 ```
+conda activate base
+conda remove -n matchmaker --all
 conda create -n matchmaker python=3.8
 conda activate matchmaker
 ```
@@ -44,6 +46,22 @@ Then install the rest of the dependencies (allennlp, huggingface, ...) via pip i
 ```
 pip install -r pip-requirements.txt
 ```
+
+
+3090 Fix:
+
+```
+conda install --file conda-requirements.txt -c conda-forge
+pip install -r pip-requirements.txt
+
+pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+
+import torch
+torch.version.cuda
+torch.cuda.get_arch_list()
+```
+
+
 
 **[Optional]** If you want to use the onnx runtime (currently implemented for dense_retrieval.py) you need to manually install cuDNN 8.0 (as of June 2021) which is a bit of a pain, but worth it :)
 

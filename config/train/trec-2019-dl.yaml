@@ -64,12 +64,13 @@ train_data_augment: "none" # "rotate" or "none"
 
 
 store_n_best_checkpoints: 1
-run_dense_retrieval_eval: True #False
+run_dense_retrieval_eval: False #False
 
 #
 # min steps number, disable with -1
 #
-min_steps_training: 300_000
+#min_steps_training: 300_000
+min_steps_training: 300000
 
 # needs to be the same model + model_config + token_embedder_type + vocabulary!
 #warmstart_model_path: None
@@ -77,10 +78,12 @@ min_steps_training: 300_000
 #
 # Models
 # -------------------------------------------------------
-model: "bert_dot_dualencoder"
+#model: "bert_dot_dualencoder"
+model: ColBERT
 
-bert_pretrained_model: "facebook/dpr-ctx_encoder-multiset-base" 
-bert_pretrained_model_secondary: "facebook/dpr-question_encoder-multiset-base"
+#bert_pretrained_model: "facebook/dpr-ctx_encoder-multiset-base" 
+#bert_pretrained_model_secondary: "facebook/dpr-question_encoder-multiset-base"
+bert_pretrained_model: distilbert-base-uncased
 bert_trainable: True
 
 #
@@ -88,6 +91,7 @@ bert_trainable: True
 #
 
 loss: "ranknet"
+#loss: margin-mse
 validation_metric: "nDCG@10"
 
 optimizer: "adam"
@@ -112,7 +116,7 @@ learning_rate_scheduler_factor: 0.25
 # train loop settings
 #
 epochs: 25
-batch_size_train: 32
+batch_size_train: 256
 batch_size_eval: 512
 
 gradient_accumulation_steps: -1

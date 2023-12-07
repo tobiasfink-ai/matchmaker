@@ -1,6 +1,6 @@
 expirement_base_path: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/experiments
 
-trained_model: tobias-fink/distilbert-dot-tas_b-b256-msmarco
+trained_model: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/experiments/2023-11-21_1813_colbert_tfidf
 
 collection_tsv: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-docs_collection.tsv
 
@@ -11,19 +11,20 @@ onnx_use_inference: False
 dataloader_num_workers: 2 # 0 means only using the main thread (not recommended)
 
 query_sets:
-  train_set:
-    queries_tsv: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-queries.tsv
-    qrels: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-qrels.tsv
-    binarization_point: 1 # what minimum relevant grade to assume for binarized metrics (mrr, recall ...)
-    top_n: 100 # how many results to return
-  dev_set: # optional more than 1 query sets
-    queries_tsv: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-queries.tsv
-    qrels: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-qrels.tsv
-    binarization_point: 1 # what minimum relevant grade to assume for binarized metrics (mrr, recall ...)
-    top_n: 100 # how many results to return
+  # dev_top1000:
+  #   binarization_point: 1
+  #   qrels: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-queries.tsv
+  #   queries_tsv: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-qrels.tsv
+  #   top_n: 1000
+  msmarco2019_top1000:
+    binarization_point: 1
+    qrels: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/2019qrels-docs.txt
+    queries_tsv: /newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-test2019-queries.tsv
+    top_n: 1000
     
 # settings for storing vectors
-token_block_size: 50000 # every n vectors create a new numpy memory mapped array file
+#token_block_size: 50000 # every n vectors create a new numpy memory mapped array file
+token_block_size: 5000000 # every n vectors create a new numpy memory mapped array file
 token_dim: 768 # sets the output dimension of the model
 token_dtype: "float16" # sets the dtype (either float16 or float32)
 
@@ -31,7 +32,7 @@ token_dtype: "float16" # sets the dtype (either float16 or float32)
 # general index 
 #
 faiss_index_type: "hnsw" # or full,ivf,hnsw,scann
-faiss_use_gpu: False
+faiss_use_gpu: True
 
 #
 # hnsw settings
