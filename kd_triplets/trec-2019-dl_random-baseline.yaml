@@ -1,0 +1,14 @@
+
+random_seed: 42
+n_docs: 3213835
+triplet_folder: /data/tfink/kodicare/trec-2019-dl/doc_ret/
+document_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-docs.tsv
+qrels_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-qrels.tsv
+queries_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-queries.tsv
+
+truncate: true
+analysis: false
+
+index_config:
+  top_k: 100
+  

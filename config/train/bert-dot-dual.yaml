@@ -78,12 +78,12 @@ min_steps_training: 300000
 #
 # Models
 # -------------------------------------------------------
-#model: "bert_dot_dualencoder"
-model: ColBERT
+model: "bert_dot_dualencoder"
+#model: ColBERT
 
-#bert_pretrained_model: "facebook/dpr-ctx_encoder-multiset-base" 
-#bert_pretrained_model_secondary: "facebook/dpr-question_encoder-multiset-base"
-bert_pretrained_model: distilbert-base-uncased
+bert_pretrained_model: "facebook/dpr-ctx_encoder-multiset-base" 
+bert_pretrained_model_secondary: "facebook/dpr-question_encoder-multiset-base"
+#bert_pretrained_model: distilbert-base-uncased
 bert_trainable: True
 
 #
@@ -116,8 +116,8 @@ learning_rate_scheduler_factor: 0.25
 # train loop settings
 #
 epochs: 25
-batch_size_train: 256
-batch_size_eval: 512
+batch_size_train: 450
+batch_size_eval: 1024
 
 gradient_accumulation_steps: -1
 

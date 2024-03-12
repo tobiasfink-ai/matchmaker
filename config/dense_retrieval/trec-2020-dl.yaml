@@ -1,6 +1,6 @@
 expirement_base_path: /data/tfink/kodicare/trec-2019-dl/doc_ret/experiments
 
-trained_model: /data/tfink/kodicare/trec-2019-dl/doc_ret/experiments/2024-01-04_1251_bert-dot-dual_bert_test
+trained_model: /data/tfink/kodicare/trec-2019-dl/doc_ret/experiments/2024-01-20_1831_bert-dot_random-baseline
 
 collection_tsv: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-docs_collection.tsv
 
@@ -20,6 +20,11 @@ query_sets:
     binarization_point: 1
     qrels: /data/tfink/kodicare/trec-2019-dl/doc_ret/2019qrels-docs.txt
     queries_tsv: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-test2019-queries.tsv
+    top_n: 1000
+  msmarco2020_top1000:
+    binarization_point: 1
+    qrels: /data/tfink/kodicare/trec-2020-dl/doc_ret/2020qrels-docs.txt
+    queries_tsv: /data/tfink/kodicare/trec-2020-dl/doc_ret/msmarco-test2020-queries.tsv
     top_n: 1000
     
 # settings for storing vectors

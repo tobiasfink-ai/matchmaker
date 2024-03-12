@@ -52,6 +52,8 @@ pip install -r pip-requirements.txt
 
 ```
 conda install --file conda-requirements.txt -c conda-forge
+
+pip install notebook==6.0.1
 pip install -r pip-requirements.txt
 
 pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html

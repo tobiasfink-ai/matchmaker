@@ -4,22 +4,22 @@
 # for BERT-based training, where you don't need idfs and the other helper data for some non-bert models
 
 # the folder where experiments are saved
-expirement_base_path: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/experiments"
+expirement_base_path: "/data/tfink/kodicare/trec-2019-dl/doc_ret/experiments"
 
 #
 # training path
 #
 # format: query-text<tab>pos-text<tab>neg-text
 # format (if train_pairwise_distillation:True): score-pos<tab>score-neg<tab>query-text<tab>pos-text<tab>neg-text
-train_tsv: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/triplets.train.txt"
+train_tsv: "/data/tfink/kodicare/trec-2019-dl/doc_ret/triplets_random-baseline.train.txt"
 
 #
 # continuous validation path
 #
 validation_cont:
   # format: query-id<tab>doc-id<tab>query-text<tab>doc-text
-  tsv: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-top100.tsv"
-  qrels: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-qrels.tsv"
+  tsv: "/data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-top100.tsv"
+  qrels: "/data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-docdev-qrels.tsv"
   binarization_point: 1 # qrely label >= for MRR,MAP,Recall -> 1 others 0
   save_only_best: True
 
@@ -42,8 +42,8 @@ validation_cont:
 test:
   top100:
     # format: query-id<tab>doc-id<tab>query-text<tab>doc-text
-    tsv: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/msmarco-doctest2019-top100.tsv"
-    qrels: "/newstorage4/fink/data/kodicare/trec-2019-dl/doc_ret/2019qrels-docs.txt"
+    tsv: "/data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctest2019-top100.tsv"
+    qrels: "/data/tfink/kodicare/trec-2019-dl/doc_ret/2019qrels-docs.txt"
     binarization_point: 1
     save_secondary_output: True
 

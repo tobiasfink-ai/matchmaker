@@ -1,0 +1,4 @@
+Creating Vectors
+[2024-03-12 16:19:18,320][sentence_transformers.SentenceTransformer][INFO] - Load pretrained SentenceTransformer: allenai/longformer-base-4096
+[2024-03-12 16:19:20,128][sentence_transformers.SentenceTransformer][WARNING] - No sentence-transformers model found with name /home/tfink/.cache/torch/sentence_transformers/allenai_longformer-base-4096. Creating a new one with MEAN pooling.
+[2024-03-12 16:19:21,622][sentence_transformers.SentenceTransformer][INFO] - Use pytorch device: cuda

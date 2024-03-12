@@ -2,7 +2,7 @@ from typing import Dict, Union
 import torch
 
 from transformers import AutoModel
-from transformers import PreTrainedModel,PretrainedConfig
+from transformers import PreTrainedModel,PretrainedConfig, DPRContextEncoder
 
 class BERT_Dot_Config(PretrainedConfig):
     model_type = "BERT_Dot"
@@ -34,7 +34,11 @@ class BERT_Dot(PreTrainedModel):
 
         super().__init__(cfg)
 
-        self.bert_model = AutoModel.from_pretrained(cfg.bert_model)
+        if "facebook/dpr" in cfg.bert_model:
+            self.bert_model = DPRContextEncoder.from_pretrained(cfg.bert_model)
+        else:
+            self.bert_model = AutoModel.from_pretrained(cfg.bert_model)
+        #self.bert_model = AutoModel.from_pretrained(cfg.bert_model)
 
         for p in self.bert_model.parameters():
             p.requires_grad = cfg.trainable
@@ -73,7 +77,8 @@ class BERT_Dot(PreTrainedModel):
                                tokens: Dict[str, torch.LongTensor],
                                sequence_type="n/a") -> torch.Tensor:
         
-        vectors = self.bert_model(**tokens)[0][:,0,:]
+        #vectors = self.bert_model(**tokens)[0][:,0,:]
+        vectors = self.bert_model(**tokens)[0]
 
         if self.use_compressor:
             vectors = self.compressor(vectors)

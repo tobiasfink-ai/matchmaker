@@ -1,0 +1,57 @@
+
+kd_experiment_name: bert
+
+random_seed: 42
+n_docs: 3213835
+triplet_folder: /data/tfink/kodicare/trec-2019-dl/doc_ret/
+document_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-docs.tsv
+qrels_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-qrels.tsv
+queries_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-queries.tsv
+total_negatives: 20 # the difference between total negatives and hard negatives will be filled with random negatives
+hard_negatives: 10
+output_seq_length: 512
+
+kd_model:
+  #model_type: tfidf # bert-embedding, topics
+  model_type: bert-embedding
+  iterator_batch_size: 32768
+  embedding_batch_size: 64
+  embedding_model: sentence-transformers/all-mpnet-base-v2
+  max_seq_length: 384
+
+truncate: true
+analysis: false
+
+index_config:
+  #search_index: pysparnn, faiss
+  search_index: faiss
+  batch_size: 1000
+  top_k: 1000
+  k_clusters: 5
+  token_dim: 768 # sets the output dimension of the model
+  token_dtype: "float32" # sets the dtype (either float16 or float32)
+  faiss_use_gpu: true
+  faiss_hnsw_graph_neighbors: 128
+  faiss_hnsw_efConstruction: 128 # higher is more accurate and slower to construct
+  faiss_hnsw_efSearch: 128
+
+triplet_files:
+  98-80:
+    upper_bound: 0.98
+    lower_bound: 0.80
+  90-70:
+    upper_bound: 0.90
+    lower_bound: 0.70
+  80-60:
+    upper_bound: 0.80
+    lower_bound: 0.60
+  70-50:
+    upper_bound: 0.70
+    lower_bound: 0.50
+  60-40:
+    upper_bound: 0.60
+    lower_bound: 0.40
+  50-30:
+    upper_bound: 0.50
+    lower_bound: 0.30
+  
