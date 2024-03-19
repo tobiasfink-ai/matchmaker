@@ -12,7 +12,7 @@ import time
 import hydra
 from omegaconf import DictConfig
 
-from kd_models import TFIDFDelta, BERTDelta
+from kd_models import TFIDFDelta, SentenceTransformerDelta, LongformerDelta
 from indexing import FaissHNSWIndexer, PySparnnIndexer
 no_num_clean_p = re.compile(r'[^\w\s]+|\d+', re.UNICODE)
 
@@ -218,7 +218,7 @@ def relevance_judgement_batches_iter(embeddings, relevance_judgements, doc_ids_i
 
     for q_id, relevant_doc_ids in tqdm(relevance_judgements.items(), desc="Create Triplets"):
         for pos_doc_id in relevant_doc_ids:
-            if pos_doc_id not in doc_ids_inv:
+            if pos_doc_id not in doc_ids_inv or len(embeddings) < doc_ids_inv[pos_doc_id]:
                 continue
             relevant_doc_vector = embeddings[doc_ids_inv[pos_doc_id]]
             search_features_vec_batch.append(relevant_doc_vector)
@@ -255,6 +255,7 @@ def main(cfg):
     search_index = cfg.index_config.search_index
     top_k = cfg.index_config.top_k
     batch_size = cfg.index_config.batch_size
+    embeddings_temp_file = cfg.embeddings_temp_file
 
     triplet_id_file = os.path.join(triplet_folder, f"triplets_{kd_experiment_name}.train.id")
 
@@ -263,20 +264,34 @@ def main(cfg):
     if kd_model_type == "tfidf":
         model = TFIDFDelta(kd_model_config)
         vector_type = VECTOR_SPARSE
-    elif kd_model_type == "bert-embedding":
-        model = BERTDelta(kd_model_config)
+    elif kd_model_type == "sentence-transformer":
+        model = SentenceTransformerDelta(kd_model_config)
+        vector_type = VECTOR_DENSE
+    elif kd_model_type == "longformer":
+        model = LongformerDelta(kd_model_config)
         vector_type = VECTOR_DENSE
     else:
         print(f"KD Model {kd_model_type} is not known.")
 
 
     t0 = time.time()
-    embeddings = model.create_embeddings(document_iterator(document_file, n_docs, iterator_batch_size))
+    if os.path.isfile(embeddings_temp_file):
+        print("Loading from temp file...")
+        embeddings = np.load(embeddings_temp_file, allow_pickle=True)
+    else:
+        embeddings = model.create_embeddings(document_iterator(document_file, n_docs, iterator_batch_size))
+        # save temp file in case of errors further down the line
+        print("Saving to temp file...")
+        np.save(embeddings_temp_file, arr=embeddings, allow_pickle=True)
     t1 = time.time()
     print("Took", t1-t0)
 
+    print("Get Document Data")
+    t0 = time.time()
     doc_ids, doc_ids_inv, doc_ids_int64 = get_document_ids(document_file)
     relevance_judgements = read_qrels(qrels_file)
+    t1 = time.time()
+    print("Took", t1-t0)
 
     print("Creating Search Index")
     t0 = time.time()
@@ -299,10 +314,9 @@ def main(cfg):
             # search approximate nearest neighbors
             #sims_with_idx = indexer.search(search_features_vec_batch, k=top_k, k_clusters=k_clusters, return_distance=True)
             sims_with_idx = indexer.search(search_features_vec_batch, top_k=top_k)
-
             # create triplets
             for i in range(len(doc_data_batch)):
-                # set all known relevant documents to -inf
+                print(i)
                 q_id, pos_doc_id, relevant_doc_ids = doc_data_batch[i]
                 for similarity, neg_doc_id in sims_with_idx[i]:
                     # if out of bounds because of some error

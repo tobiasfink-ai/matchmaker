@@ -74,6 +74,8 @@ class FaissBaseIndexer(BaseNNIndexer):
         self.faiss_index:faiss.Index = None # needs to be initialized by the actual faiss classes
 
     def index(self, ids:List[numpy.ndarray], embeddings):
+        # normalize embeddings for cosine similarity inner product
+        faiss.normalize_L2(embeddings)
         # single add needed for multi-gpu index (sharded), and hnsw so just do it for all (might be a memory problem at some point, but we can come back to that)
         i = numpy.array(ids, dtype=numpy.int64)
         #i = numpy.concatenate(ids).astype(numpy.int64)

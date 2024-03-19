@@ -12,8 +12,8 @@ hard_negatives: 10
 output_seq_length: 512
 
 kd_model:
-  #model_type: tfidf # bert-embedding, topics
-  model_type: bert-embedding
+  #model_type: tfidf # sentence-transformer, longformer, topics
+  model_type: sentence-transformer
   iterator_batch_size: 32768
   embedding_batch_size: 64
   embedding_model: sentence-transformers/all-mpnet-base-v2

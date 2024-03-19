@@ -10,14 +10,15 @@ queries_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-queries
 total_negatives: 20 # the difference between total negatives and hard negatives will be filled with random negatives
 hard_negatives: 10
 output_seq_length: 512
+embeddings_temp_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/longformer.tmp # only create embeddings if this does not exist
 
 kd_model:
-  #model_type: tfidf # bert-embedding, topics
-  model_type: bert-embedding
-  iterator_batch_size: 32768
-  embedding_batch_size: 64
+  #model_type: tfidf # sentence-transformer, longformer, topics
+  model_type: longformer
+  iterator_batch_size: 2 #32768
   embedding_model: allenai/longformer-base-4096
   max_seq_length: 4096
+  global_attention_mask_tokens: 384 # the first n tokens will have global attention, others only local
 
 truncate: true
 analysis: false
