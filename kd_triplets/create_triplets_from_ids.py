@@ -6,6 +6,7 @@ import time
 import random
 import hydra
 from omegaconf import DictConfig
+from dataloader import TrecDLLoader, TrecRobust04Loader
 
 
 # Create Triplets for dense retrieval training in the format: query-text<tab>pos-text<tab>neg-text.
@@ -74,8 +75,8 @@ def relevance_judgement_iter(relevance_judgements, doc_ids_inv):
 def create_triplets(cfg, triplet_slice, documents, queries, upper_bound, lower_bound):
     random_seed = cfg.random_seed
     triplet_folder = cfg.triplet_folder
-    document_file = cfg.document_file
-    qrels_file = cfg.qrels_file
+    dataloader_type = cfg.dataloader.dataloader_type
+    dataloader_config = cfg.dataloader
     kd_experiment_name = cfg.kd_experiment_name
     triplet_id_file = os.path.join(triplet_folder, f"triplets_{kd_experiment_name}.train.id")
     truncate = cfg.truncate
@@ -89,8 +90,15 @@ def create_triplets(cfg, triplet_slice, documents, queries, upper_bound, lower_b
     triplet_slice_name = f"triplets_{kd_experiment_name}_{triplet_slice}.train.txt"
     print(f"Processing Triplets {triplet_slice_name}")
 
-    doc_ids, doc_ids_inv, doc_ids_int64 = get_document_ids(document_file)
-    relevance_judgements = read_qrels(qrels_file)
+    if dataloader_type == "trec-dl":
+        dataloader = TrecDLLoader(dataloader_config)
+    elif dataloader_type == "robust04":
+        dataloader = TrecRobust04Loader(dataloader_config)
+    else:
+        print(f"Dataloader {dataloader_type} is not known.")
+
+    doc_ids, doc_ids_inv, doc_ids_int64 = dataloader.get_document_ids()
+    relevance_judgements = dataloader.read_qrels()
 
     random.seed(random_seed)
 

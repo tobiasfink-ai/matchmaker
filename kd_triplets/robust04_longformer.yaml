@@ -2,20 +2,17 @@
 kd_experiment_name: longformer
 
 random_seed: 42
-triplet_folder: /data/tfink/kodicare/trec-2019-dl/doc_ret/
+triplet_folder: /data/tfink/kodicare/robust04/
 
 dataloader:
-  dataloader_type: trec-dl
-  document_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-docs.tsv
-  qrels_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-qrels.tsv
-  queries_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-queries.tsv
-  n_docs: 3213835
+  dataloader_type: robust04
+  folds: [1, 2, 3]
   iterator_batch_size: 2 #32768
 
 total_negatives: 20 # the difference between total negatives and hard negatives will be filled with random negatives
 hard_negatives: 10
 output_seq_length: 512
-embeddings_temp_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/longformer.tmp # only create embeddings if this does not exist
+embeddings_temp_file: /data/tfink/kodicare/robust04/longformer.tmp # only create embeddings if this does not exist
 
 kd_model:
   #model_type: tfidf # sentence-transformer, longformer, topics

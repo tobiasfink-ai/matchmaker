@@ -12,6 +12,7 @@ import time
 import hydra
 from omegaconf import DictConfig
 
+from dataloader import TrecDLLoader, TrecRobust04Loader
 from kd_models import TFIDFDelta, SentenceTransformerDelta, LongformerDelta
 from indexing import FaissHNSWIndexer, PySparnnIndexer
 no_num_clean_p = re.compile(r'[^\w\s]+|\d+', re.UNICODE)
@@ -243,13 +244,11 @@ def relevance_judgement_batches_iter(embeddings, relevance_judgements, doc_ids_i
 
 @hydra.main(version_base=None, config_path=".", config_name=None)
 def main(cfg):
-    n_docs = cfg.n_docs
-    document_file = cfg.document_file
-    qrels_file = cfg.qrels_file
+    dataloader_type = cfg.dataloader.dataloader_type
+    dataloader_config = cfg.dataloader
     triplet_folder = cfg.triplet_folder
     kd_experiment_name = cfg.kd_experiment_name
     kd_model_config = cfg.kd_model
-    iterator_batch_size = cfg.kd_model.iterator_batch_size
     kd_model_type = cfg.kd_model.model_type
     index_config = cfg.index_config
     search_index = cfg.index_config.search_index
@@ -273,13 +272,20 @@ def main(cfg):
     else:
         print(f"KD Model {kd_model_type} is not known.")
 
+    if dataloader_type == "trec-dl":
+        dataloader = TrecDLLoader(dataloader_config)
+    elif dataloader_type == "robust04":
+        dataloader = TrecRobust04Loader(dataloader_config)
+    else:
+        print(f"Dataloader {dataloader_type} is not known.")
+
 
     t0 = time.time()
     if os.path.isfile(embeddings_temp_file):
         print("Loading from temp file...")
         embeddings = np.load(embeddings_temp_file, allow_pickle=True)
     else:
-        embeddings = model.create_embeddings(document_iterator(document_file, n_docs, iterator_batch_size))
+        embeddings = model.create_embeddings(dataloader.document_iterator())
         # save temp file in case of errors further down the line
         print("Saving to temp file...")
         np.save(embeddings_temp_file, arr=embeddings, allow_pickle=True)
@@ -288,8 +294,8 @@ def main(cfg):
 
     print("Get Document Data")
     t0 = time.time()
-    doc_ids, doc_ids_inv, doc_ids_int64 = get_document_ids(document_file)
-    relevance_judgements = read_qrels(qrels_file)
+    doc_ids, doc_ids_inv, doc_ids_int64 = dataloader.get_document_ids()
+    relevance_judgements = dataloader.read_qrels()
     t1 = time.time()
     print("Took", t1-t0)
 

@@ -2,19 +2,24 @@
 kd_experiment_name: bert
 
 random_seed: 42
-n_docs: 3213835
 triplet_folder: /data/tfink/kodicare/trec-2019-dl/doc_ret/
-document_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-docs.tsv
-qrels_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-qrels.tsv
-queries_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-queries.tsv
+
+dataloader:
+  dataloader_type: trec-dl
+  document_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-docs.tsv
+  qrels_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-qrels.tsv
+  queries_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/msmarco-doctrain-queries.tsv
+  n_docs: 3213835
+  iterator_batch_size: 32768
+
 total_negatives: 20 # the difference between total negatives and hard negatives will be filled with random negatives
 hard_negatives: 10
 output_seq_length: 512
+embeddings_temp_file: /data/tfink/kodicare/trec-2019-dl/doc_ret/sentence_bert.tmp # only create embeddings if this does not exist
 
 kd_model:
   #model_type: tfidf # sentence-transformer, longformer, topics
   model_type: sentence-transformer
-  iterator_batch_size: 32768
   embedding_batch_size: 64
   embedding_model: sentence-transformers/all-mpnet-base-v2
   max_seq_length: 384
