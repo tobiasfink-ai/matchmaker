@@ -322,7 +322,6 @@ def main(cfg):
             sims_with_idx = indexer.search(search_features_vec_batch, top_k=top_k)
             # create triplets
             for i in range(len(doc_data_batch)):
-                print(i)
                 q_id, pos_doc_id, relevant_doc_ids = doc_data_batch[i]
                 for similarity, neg_doc_id in sims_with_idx[i]:
                     # if out of bounds because of some error
