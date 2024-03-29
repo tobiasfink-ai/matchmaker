@@ -32,7 +32,7 @@ class TrecDLLoader(Dataloader):
         super().__init__()
         self.document_file = cfg.document_file
         self.n_docs = cfg.n_docs
-        self.batch_size = cfg.batch_size
+        self.batch_size = cfg.iterator_batch_size
         self.qrels_file = cfg.qrels_file
         self.queries_file = cfg.queries_file
     
@@ -146,7 +146,7 @@ class TrecRobust04Loader(Dataloader):
     def __init__(self, cfg) -> None:
         super().__init__()
         self.dataset_name = "disks45/nocr/trec-robust-2004"
-        self.batch_size = cfg.batch_size
+        self.batch_size = cfg.iterator_batch_size
         self.folds = cfg.folds # qrels and queries from only the selected folds
 
 
@@ -158,12 +158,12 @@ class TrecRobust04Loader(Dataloader):
         """
         dataset = ir_datasets.load(self.dataset_name)
         if not self.batch_size or self.batch_size <= 0: # single document version
-            for doc in tqdm(dataset.docs_iter()):
+            for doc in tqdm(dataset.docs_iter(), desc="Doc Iter", total=dataset.docs_count()):
                 doc_text = f"{doc.title} {doc.body}"
                 yield doc_text
         else: # batched version
             docs_batch = []
-            for doc in tqdm(dataset.docs_iter()):
+            for doc in tqdm(dataset.docs_iter(), desc="Doc Iter", total=dataset.docs_count()):
                 doc_text = f"{doc.title} {doc.body}"
                 docs_batch.append(doc_text)
                 if len(docs_batch) >= self.batch_size:
@@ -179,7 +179,7 @@ class TrecRobust04Loader(Dataloader):
         """
         documents = {}
         dataset = ir_datasets.load(self.dataset_name)
-        for doc in tqdm(dataset.docs_iter()):
+        for doc in tqdm(dataset.docs_iter(), desc="Loading Docs", total=dataset.docs_count()):
             doc_text = f"{doc.title} {doc.body}"
             documents[doc.doc_id] = doc_text
         return documents

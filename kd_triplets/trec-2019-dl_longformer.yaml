@@ -22,7 +22,7 @@ kd_model:
   model_type: longformer
   embedding_model: allenai/longformer-base-4096
   max_seq_length: 4096
-  global_attention_mask_tokens: 384 # the first n tokens will have global attention, others only local
+  global_attention_mask_tokens: 1 # the first n tokens will have global attention, others only local
 
 truncate: true
 analysis: false
